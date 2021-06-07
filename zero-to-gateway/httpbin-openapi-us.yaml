@@ -1,0 +1,22 @@
+apiVersion: gloo.solo.io/v1
+kind: Upstream
+metadata:
+  labels:
+    discovered_by: kubernetesplugin
+  name: default-httpbin-8000
+  namespace: gloo-system
+spec:
+  discoveryMetadata:
+    labels:
+      app: httpbin
+      service: httpbin
+  kube:
+    selector:
+      app: httpbin
+    serviceName: httpbin
+    serviceNamespace: default
+    servicePort: 8000
+    serviceSpec:
+      rest:
+        swaggerInfo:
+          url: https://raw.githubusercontent.com/jameshbarton/solo-resources/main/zero-to-gateway/httpbin.swagger.json
