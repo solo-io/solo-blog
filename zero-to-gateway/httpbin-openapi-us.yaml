@@ -19,4 +19,4 @@ spec:
     serviceSpec:
       rest:
         swaggerInfo:
-          url: https://raw.githubusercontent.com/solo-io/solo-blog/main/zero-to-gateway/httpbin-openapi-us.yaml
+          url: https://raw.githubusercontent.com/solo-io/solo-blog/main/zero-to-gateway/httpbin-openapi.json
