@@ -1,0 +1,36 @@
+apiVersion: gateway.solo.io/v1
+kind: VirtualService
+metadata:
+  name: httpbin-vs
+  namespace: gloo-system
+spec:
+  virtualHost:
+    domains:
+    - '*'
+    routes:
+    - matchers:
+      - prefix: /
+      options:
+        stagedTransformations:
+          early:
+            requestTransforms:
+              - matcher:
+                  prefix: /
+                requestTransformation:
+                  transformationTemplate:
+                    extractors:
+                      token-extractor:
+                        header: 'Authorization'
+                        regex: 'Bearer (.*)'
+                        subgroup: 1
+                    headers:
+                      api-key:
+                        text: '{{ token-extractor }}'
+        headerManipulation:
+            requestHeadersToRemove:
+            - "Authorization"
+      routeAction:
+        single:
+          upstream:
+            name: default-httpbin-8000
+            namespace: gloo-system
