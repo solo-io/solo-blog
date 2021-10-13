@@ -1,0 +1,55 @@
+apiVersion: portal.gloo.solo.io/v1beta1
+kind: Group
+metadata:
+  name: developers
+  namespace: gloo-portal
+spec:
+  displayName: developers
+  # AccessLevel determines the resources the group has access to,
+  # including APIProducts and Portals.
+  accessLevel:
+    apis:
+    - products:
+        namespaces:
+        - "*"
+        labels:
+        - key: app
+          operator: In
+          values:
+          - world-cities
+      environments:
+        namespaces:
+        - "*"
+      usagePlans:
+      - basic
+    portals:
+    - name: world-cities-portal
+      namespace: default
+  userSelector:
+    matchLabels:
+      groups.portal.gloo.solo.io/gloo-portal.developers: "true"
+---
+apiVersion: portal.gloo.solo.io/v1beta1
+kind: User
+metadata:
+  name: dev1
+  namespace: gloo-portal
+  labels: {
+    groups.portal.gloo.solo.io/gloo-portal.developers: "true"
+  }
+spec:
+  accessLevel: {}
+  basicAuth:
+    passwordSecretKey: password
+    passwordSecretName: dev1-password
+    passwordSecretNamespace: gloo-portal
+  username: dev1
+---
+apiVersion: v1
+kind: Secret
+data: # decoded password is Pa$$w0rd
+  password: JDJhJDEwJFI0RGQwNE1TUTlDSnptOFZYQy5IVE9janBJenplSXRwaW1NVFgxL2p1bWJZSHpXcnNpQ29h
+metadata:
+  name: dev1-password
+  namespace: gloo-portal
+type: opaque

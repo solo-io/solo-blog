@@ -1,0 +1,99 @@
+{
+    "openapi": "3.0.1",
+    "info": {
+      "title": "worldCities",
+      "description": "World Cities API",
+      "version": "0.1"
+    },
+    "servers": [
+      {
+        "url": "http://api.worldcities.example.com"
+      }
+    ],
+    "paths": {
+      "/": {
+        "post": {
+          "description": "Query world cities by string pattern",
+          "operationId": "/",
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/body"
+                },
+                "examples": {
+                  "south-bo": {
+                    "value": "{\"cityQuery\": \"south bo\"}"
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "south-bo response",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/inline_response_200"
+                  },
+                  "examples": {
+                    "south-bo": {
+                      "value": "\n  { \"matches\" : \n    [ \n      { \"city\" : \"south boston\",\n        \"country\" : \"United States\",\n        \"subCountry\" : \"Massachusetts\",\n        \"geoNameId\" : \"4951305\" },\n      \n      { \"city\" : \"south peabody\",\n        \"country\" : \"United States\",\n        \"subCountry\" : \"Massachusetts\",\n        \"geoNameId\" : \"4951473\" },\n      \n      { \"city\" : \"south bradenton\",\n        \"country\" : \"United States\",\n        \"subCountry\" : \"Florida\",\n        \"geoNameId\" : \"4173392\" },\n      \n      { \"city\" : \"south burlington\",\n        \"country\" : \"United States\",\n        \"subCountry\" : \"Vermont\",\n        \"geoNameId\" : \"5241248\" } ] }"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "servers": [
+            {
+              "url": "http://api.worldcities.example.com"
+            }
+          ]
+        },
+        "servers": [
+          {
+            "url": "http://api.worldcities.example.com"
+          }
+        ]
+      }
+    },
+    "components": {
+      "schemas": {
+        "body": {
+          "type": "object",
+          "properties": {
+            "cityQuery": {
+              "type": "string"
+            }
+          }
+        },
+        "inline_response_200": {
+          "type": "object",
+          "properties": {
+            "matches": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "geoNameId": {
+                    "type": "string"
+                  },
+                  "country": {
+                    "type": "string"
+                  },
+                  "subCountry": {
+                    "type": "string"
+                  },
+                  "city": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }

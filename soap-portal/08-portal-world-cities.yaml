@@ -1,0 +1,26 @@
+apiVersion: portal.gloo.solo.io/v1beta1
+kind: Portal
+metadata:
+  name: world-cities-portal
+  namespace: default
+spec:
+  displayName: World Cities Portal
+  description: The Gloo Portal for the World Cities API
+  banner:
+    fetchUrl: https://i.imgur.com/7cQk0ac.png
+  favicon:
+    fetchUrl: https://i.imgur.com/7cQk0ac.png
+  primaryLogo:
+    fetchUrl: https://i.imgur.com/7cQk0ac.png
+  customStyling: {}
+  staticPages: []
+
+  domains:
+  # If you are using Gloo Edge and the Gateway is listening on a port other than 80, 
+  # you need to include a domain in this format: <DOMAIN>:<INGRESS_PORT> as we do below
+  - worldcities.example.com
+
+  # This will include all API products of the environment in the portal
+  publishedEnvironments:
+  - name: dev-world-cities
+    namespace: default
