@@ -5,7 +5,6 @@ metadata:
   namespace: default
 spec:
   ## specify the type of schema provided in this APIDoc.
-  ## openApi is only option at this time.
   openApi:
     content:
       # we use a fetchUrl here to tell the Gloo Portal
@@ -31,9 +30,9 @@ spec:
   versions:
   - name: v1
     apis:
-    # Specify the API Doc(s) that will be included in the Product
+    # Specify the APIDoc(s) that will be included in the Product
     # each specifier can include a list of individual operations
-    # to import from the API Doc.
+    # to import from the APIDoc.
     #
     # If none are listed, all the 
     # operations will be imported from the doc. 
