@@ -16,8 +16,6 @@ spec:
   staticPages: []
 
   domains:
-  # If you are using Gloo Edge and the Gateway is listening on a port other than 80, 
-  # you need to include a domain in this format: <DOMAIN>:<INGRESS_PORT> as we do below
   - worldcities.example.com
 
   # This will include all API products of the environment in the portal
