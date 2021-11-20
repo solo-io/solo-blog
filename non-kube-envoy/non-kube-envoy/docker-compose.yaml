@@ -1,0 +1,20 @@
+version: '3'
+
+services:
+
+  gateway-proxy:
+    # gloo-ee-envoy-wrapper is the Gloo Edge Enterprise base image. 
+    # For the open-source image, replace "gloo-ee-envoy-wrapper" with "gloo-envoy-wrapper" below. 
+    # You may also need to adjust the version number from 1.9.0 if you're using a non-1.9 
+    # Gloo Edge version.
+    image: ${GLOO_REPO:-quay.io/solo-io}/gloo-ee-envoy-wrapper:${GLOO_VERSION:-1.9.0}
+    entrypoint: ["envoy"]
+    command: ["-c", "/config/envoy.yaml", "--disable-hot-restart"]
+    volumes:
+    - ./data/envoy-config.yaml:/config/envoy.yaml:ro
+    ports:
+    - "8080:8080"
+    - "8443:8443"
+    - "19000:19000"
+    restart: always
+

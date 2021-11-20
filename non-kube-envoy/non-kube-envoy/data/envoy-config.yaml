@@ -1,0 +1,53 @@
+node:
+  cluster: gateway
+  id: docker-compose-node
+  metadata:
+    # this line must match !
+    role: "gloo-system~gateway-proxy"
+static_resources:
+  clusters:
+  # The xds_cluster identifies where the Envoy proxy should retrieve its configuration. 
+  # By default, this is the gloo pod that represents the heart of the Gloo Edge control plane.
+  - name: xds_cluster
+    type: STRICT_DNS
+    http2_protocol_options: {}
+    connect_timeout: 5.000s
+    # It is vital to establish these tcp_keepalive options when connecting to the upstream gloo 
+    # service. Without them, the connections are often reset due to default CLB timeout settings.
+    upstream_connection_options:
+      tcp_keepalive:
+        keepalive_probes: 10
+        keepalive_time: 30
+        keepalive_interval: 5
+    load_assignment:
+      cluster_name: xds_cluster
+      endpoints:
+      - lb_endpoints:
+        - endpoint:
+            address:
+              socket_address:
+                # address: gloo
+                # Instead of using the standard in-cluster gloo pod to retrieve configuration, 
+                # we will use the load balancer endpoint established by exposing the gloo service 
+                # as a LoadBalancer service, rather than the default ClusterIP type.
+                # Replace the address below with YOUR gloo service LB address.
+                address: a7788fc21d90a4c3eb7e231344772a69-1799697922.us-east-2.elb.amazonaws.com
+                port_value: 9977
+dynamic_resources:
+  ads_config:
+    transport_api_version: V3
+    api_type: GRPC
+    grpc_services:
+    - envoy_grpc: {cluster_name: xds_cluster}
+  cds_config:
+    ads: {}
+    resource_api_version: V3
+  lds_config:
+    ads: {}
+    resource_api_version: V3
+admin:
+  access_log_path: /dev/null
+  address:
+    socket_address:
+      address: 0.0.0.0
+      port_value: 19000
