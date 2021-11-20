@@ -9,3 +9,5 @@
     * https://www.solo.io/blog/from-zero-to-gloo-edge-in-15-minutes-gke/
     * https://www.solo.io/blog/from-zero-to-gloo-edge-in-15-minutes-eks-edition/
     * https://www.solo.io/blog/getting-started-with-envoy-proxy-in-15-minutes/
+* non-kube-envoy
+    * https://www.solo.io/blog/deploying-envoy-proxies-outside-kubernetes-with-gloo-edge/ 
