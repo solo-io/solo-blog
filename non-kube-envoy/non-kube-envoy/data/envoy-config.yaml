@@ -12,13 +12,6 @@ static_resources:
     type: STRICT_DNS
     http2_protocol_options: {}
     connect_timeout: 5.000s
-    # It is vital to establish these tcp_keepalive options when connecting to the upstream gloo 
-    # service. Without them, the connections are often reset due to default CLB timeout settings.
-    upstream_connection_options:
-      tcp_keepalive:
-        keepalive_probes: 10
-        keepalive_time: 30
-        keepalive_interval: 5
     load_assignment:
       cluster_name: xds_cluster
       endpoints:
