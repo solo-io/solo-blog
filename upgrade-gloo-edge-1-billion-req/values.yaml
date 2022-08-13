@@ -1,0 +1,95 @@
+global:
+  extensions:
+    extAuth:
+      deployment:
+        replicas: 150
+gloo:
+  settings:
+    disableKubernetesDestinations: true
+    invalidConfigPolicy:
+      invalidRouteResponseBody: Gloo Gateway has invalid configuration. Administrators
+        should run `glooctl check` to find and fix config errors.
+      invalidRouteResponseCode: 404
+      replaceInvalidRoutes: true
+    kubeResourceOverride:
+      spec:
+        gloo:
+          removeUnusedFilters: true
+  
+  gateway:
+    validation:
+      allowWarnings: false # reject if warning status or rejected status
+      alwaysAcceptResources: false # reject invalid resources
+      failurePolicy: Fail # ValidatingWebHookConfig
+      disableTransformationValidation: true # better performances but more risky
+      warnRouteShortCircuiting: true
+  
+  gloo:
+    discovery:
+      enabled: false
+
+  gatewayProxies:
+    gatewayProxy:
+      kind:
+        deployment:
+          replicas: 80
+      
+      service:
+        httpPort: 80
+        type: LoadBalancer
+        extraAnnotations:
+          cloud.google.com/neg: '{ "exposed_ports":{ "80":{"name": "baptiste-billion-neg"} } }'
+
+      loopBackAddress: 0.0.0.0 # required for the Envoy admin server + health checks
+      antiAffinity: true
+
+      podTemplate:
+        resources:
+          requests:
+            memory: 1Gi
+            cpu: 8
+          limits:
+            memory: "6Gi"
+            cpu: 10
+        terminationGracePeriodSeconds: 7
+        gracefulShutdown:
+          enabled: true
+          sleepTimeSeconds: 5
+        probes: true
+        customReadinessProbe:
+          httpGet:
+            scheme: HTTP
+            port: 8080
+            path: /envoy-hc
+            httpHeaders:
+            - name: api-key
+              value: abc
+          failureThreshold: 2
+          initialDelaySeconds: 5
+          periodSeconds: 5
+        
+      gatewaySettings:
+        customHttpGateway:
+          options:
+            healthCheck:
+              path: /envoy-hc
+            httpConnectionManagerSettings:
+              useRemoteAddress: true
+        accessLoggingService:
+          accessLog:
+            - fileSink:
+                path: /dev/stdout
+                jsonFormat:
+                  filterState: '%FILTER_STATE(io.solo.modsecurity.audit_log)%'
+                  httpMethod: '%REQ(:METHOD)%'
+                  protocol: '%PROTOCOL%'
+                  responseCode: '%RESPONSE_CODE%'
+                  clientDuration: '%DURATION%'
+                  targetDuration: '%RESPONSE_DURATION%'
+                  path: '%REQ(X-ENVOY-ORIGINAL-PATH?:PATH)%'
+                  upstreamName: '%UPSTREAM_CLUSTER%'
+                  systemTime: '%START_TIME%'
+                  requestId: '%REQ(X-REQUEST-ID)%'
+                  responseFlags: '%RESPONSE_FLAGS%'
+                  xForwardedFor: '%REQ(X-FORWARDED-FOR)%'
+                  downstreamRemoteAddress: '%DOWNSTREAM_REMOTE_ADDRESS%'
