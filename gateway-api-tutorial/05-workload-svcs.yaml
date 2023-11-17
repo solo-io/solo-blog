@@ -1,0 +1,112 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: my-workload
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: my-workload
+  namespace: my-workload
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-workload-v1
+  namespace: my-workload
+  labels:
+    app: my-workload-v1
+    version: v1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+        app: my-workload-v1
+        version: v1
+  template:
+    metadata:
+      labels:
+        app: my-workload-v1
+        version: v1
+      annotations:
+    spec:     
+      serviceAccountName: my-workload
+      containers:
+      - name: my-workload
+        image: nicholasjackson/fake-service:v0.7.8
+        ports:
+        - containerPort: 8080
+        env:
+        - name: "LISTEN_ADDR"
+          value: "0.0.0.0:8080"
+        - name: "NAME"
+          value: "my-workload-v1"
+        - name: "SERVER_TYPE"
+          value: "http"
+        - name: "MESSAGE"
+          value: "Hello From My Workload (v1)!"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-workload-v2
+  namespace: my-workload
+  labels:
+    app: my-workload-v2
+    version: v2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+        app: my-workload-v2
+        version: v2
+  template:
+    metadata:
+      labels:
+        app: my-workload-v2
+        version: v2
+      annotations:
+    spec:     
+      serviceAccountName: my-workload
+      containers:
+      - name: my-workload
+        image: nicholasjackson/fake-service:v0.7.8
+        ports:
+        - containerPort: 8080
+        env:
+        - name: "LISTEN_ADDR"
+          value: "0.0.0.0:8080"
+        - name: "NAME"
+          value: "my-workload-v2"
+        - name: "SERVER_TYPE"
+          value: "http"
+        - name: "MESSAGE"
+          value: "Hello From My Workload (v2)!"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-workload-v1
+  namespace: my-workload
+spec:
+  selector:
+    app: my-workload-v1
+  ports:
+  - name: http
+    protocol: TCP
+    port: 8080
+    targetPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-workload-v2
+  namespace: my-workload
+spec:
+  selector:
+    app: my-workload-v2
+  ports:
+  - name: http
+    protocol: TCP
+    port: 8080
+    targetPort: 8080

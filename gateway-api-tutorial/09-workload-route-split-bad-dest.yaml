@@ -1,0 +1,27 @@
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: HTTPRoute
+metadata:
+  name: my-workload
+  namespace: my-workload
+  labels:
+    example: my-workload-route
+spec:
+  parentRefs:
+    - name: http
+      namespace: gloo-system
+  hostnames:
+    - "api.example.com"
+  rules:
+    - matches:
+      - path:
+          type: PathPrefix
+          value: /api/my-workload
+      backendRefs:
+        - name: my-workload-v1
+          namespace: my-workload
+          port: 8080
+          weight: 50
+        - name: my-bad-workload-v2
+          namespace: my-workload
+          port: 8080
+          weight: 50
