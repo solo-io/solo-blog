@@ -1,4 +1,6 @@
 # solo-blog - Resources to support solo.io/blog posts
+* gateway-api-tutorial
+    * https://www.solo.io/blog/hands-on-with-the-kubernetes-gateway-api-30-minutes-to-your-first-deployment
 * log4shell
     * https://www.solo.io/blog/block-log4shell-attacks-with-gloo-edge/ 
 * non-kube-envoy
