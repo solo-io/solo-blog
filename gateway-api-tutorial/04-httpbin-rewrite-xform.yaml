@@ -20,6 +20,7 @@ spec:
             path:
               type: ReplacePrefixMatch
               replacePrefixMatch: /
+        # Add a Bearer token to supply a static API key when routing to backend system
         - type: RequestHeaderModifier
           requestHeaderModifier:
             add:

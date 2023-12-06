@@ -11,10 +11,12 @@ spec:
     - api.example.com
   rules:
     - matches:
+        # Switch from an Exact Matcher to a PathPrefix Matcher
         - path:
             type: PathPrefix
             value: /api/httpbin/
       filters:
+        # Replace the /api/httpbin matched prefix with /
         - type: URLRewrite
           urlRewrite:
             path:

@@ -16,6 +16,7 @@ spec:
       - path:
           type: PathPrefix
           value: /api/my-workload
+        # Add a matcher to route requests with a v2 version header to v2
         headers:
         - name: version
           value: v2
@@ -24,6 +25,7 @@ spec:
           namespace: my-workload
           port: 8080      
     - matches:
+      # Route requests without the version header to v1 as before
       - path:
           type: PathPrefix
           value: /api/my-workload

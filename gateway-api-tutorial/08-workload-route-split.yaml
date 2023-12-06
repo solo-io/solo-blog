@@ -16,6 +16,7 @@ spec:
       - path:
           type: PathPrefix
           value: /api/my-workload
+      # Configure a 50-50 traffic split across v1 and v2
       backendRefs:
         - name: my-workload-v1
           namespace: my-workload
